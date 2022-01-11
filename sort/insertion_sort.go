@@ -1,7 +1,11 @@
 package sort
 
-// InsertionSort performs a basic insertion sort on the slice of integers,
-// returning the sorted slice.
+// Insertion Sort - a well-known sorting algorithm
+// Runs in Θ(n^2)
+
+// InsertionSort performs a basic non-decreasinginsertion sort on
+//the slice of integers, returning the sorted slice.  The original slice
+// is sorted in situ.
 func InsertionSort(a []int) []int {
 	// Loop through the slice, starting with the second element.
 	for index, val := range a[1:] {
