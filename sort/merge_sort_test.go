@@ -37,5 +37,16 @@ var _ = Describe("MergeSort", func() {
 			sorted := sort.MergeSort(unsorted)
 			Expect(sorted).To(Equal([]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}))
 		})
+
+		Context("When the number of elements is odd", func() {
+			BeforeEach(func() {
+				unsorted = []int{10, 7, 1, 4, 11, 2, 3, 8, 6, 5, 9}
+			})
+
+			It("Sorts the slice", func() {
+				sorted := sort.MergeSort(unsorted)
+				Expect(sorted).To(Equal([]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}))
+			})
+		})
 	})
 })
