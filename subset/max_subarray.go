@@ -50,6 +50,8 @@ func MaxCrossingSubarray(a []int) (sum, leftBound, rightBound int) {
 
 // MaxSubarray implements a recursive divide-and-conquer algorithm
 // for computing the maximum subarray of a given list.
+// Changes would be required to support 0-length or nil
+// slices.
 // MaxSubarray runs in Θ(nlogn).
 func MaxSubarray(a []int) (sum, leftBound, rightBound int) {
 	if len(a) == 1 {
@@ -81,6 +83,38 @@ func MaxSubarray(a []int) (sum, leftBound, rightBound int) {
 		sum = crossSum
 		leftBound = crossLow
 		rightBound = crossHigh
+	}
+
+	return
+}
+
+// MaxSubarrayLinear implements finding the maximum subarray
+// in linear time.
+// MaxSubarrayLinear runs in Θ(n).
+func MaxSubarrayLinear(a []int) (max, leftBound, rightBound int) {
+	var (
+		currentSum int
+	)
+
+	if len(a) == 0 {
+		return 0, 0, 0
+	}
+
+	max = minValueInt()
+
+	for idx, val := range a {
+		currentSum += val
+
+		if currentSum > max {
+			if val > currentSum {
+				max = val
+				currentSum = val
+				leftBound = idx
+			} else {
+				max = currentSum
+			}
+			rightBound = idx
+		}
 	}
 
 	return
