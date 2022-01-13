@@ -1,7 +1,6 @@
 package subset
 
 import (
-	"fmt"
 	"math/bits"
 )
 
@@ -14,16 +13,18 @@ func minValueInt() int {
 	return -9223372036854775808
 }
 
-func MaxCrossingSubarray(a []int) []int {
+// MaxCrossingSubarray finds the maximum subarray which includes
+// (crosses) the midpoint of the list.
+// MaxCrossingSubarray runs in Θ(n).
+func MaxCrossingSubarray(a []int) (sum, leftBound, rightBound int) {
 	var (
-		leftBound, rightBound, leftSum, rightSum, sum, midpoint int
+		leftSum, rightSum, midpoint int
 	)
 
 	leftSum = minValueInt()
 	rightSum = leftSum
 
 	midpoint = len(a) / 2
-	fmt.Printf("Midpoint: %d\n", midpoint)
 	for idx := midpoint - 1; idx >= 0; idx-- {
 		sum += a[idx]
 		if sum > leftSum {
@@ -41,5 +42,46 @@ func MaxCrossingSubarray(a []int) []int {
 		}
 	}
 
-	return a[leftBound : midpoint+rightBound+1]
+	sum = leftSum + rightSum
+	rightBound += midpoint
+
+	return
+}
+
+// MaxSubarray implements a recursive divide-and-conquer algorithm
+// for computing the maximum subarray of a given list.
+// MaxSubarray runs in Θ(nlogn).
+func MaxSubarray(a []int) (sum, leftBound, rightBound int) {
+	if len(a) == 1 {
+		return a[0], 0, 0
+	}
+
+	var (
+		midpoint                      int
+		leftSum, leftLow, leftHigh    int
+		rightSum, rightLow, rightHigh int
+		crossSum, crossLow, crossHigh int
+	)
+
+	midpoint = len(a) / 2
+
+	leftSum, leftLow, leftHigh = MaxSubarray(a[:midpoint])
+	rightSum, rightLow, rightHigh = MaxSubarray(a[midpoint:])
+	crossSum, crossLow, crossHigh = MaxCrossingSubarray(a)
+
+	if leftSum >= rightSum && leftSum >= crossSum {
+		sum = leftSum
+		leftBound = leftLow
+		rightBound = leftHigh
+	} else if rightSum >= leftSum && rightSum >= crossSum {
+		sum = rightSum
+		leftBound = rightLow + midpoint
+		rightBound = rightHigh + midpoint
+	} else {
+		sum = crossSum
+		leftBound = crossLow
+		rightBound = crossHigh
+	}
+
+	return
 }
