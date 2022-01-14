@@ -89,11 +89,11 @@ func MaxSubarray(a []int) (sum, leftBound, rightBound int) {
 }
 
 // MaxSubarrayLinear implements finding the maximum subarray
-// in linear time.
+// in linear time (using Kadane's algorithm).
 // MaxSubarrayLinear runs in Θ(n).
 func MaxSubarrayLinear(a []int) (max, leftBound, rightBound int) {
 	var (
-		currentSum int
+		currentSum, currentLeftBound, currentRightBound int
 	)
 
 	if len(a) == 0 {
@@ -101,19 +101,42 @@ func MaxSubarrayLinear(a []int) (max, leftBound, rightBound int) {
 	}
 
 	max = minValueInt()
+	currentSum = max
 
+	// for idx, val := range a {
+	// 	currentSum += val
+	//
+	// 	if currentSum > max {
+	// 		if val > currentSum {
+	// 			max = val
+	// 			currentSum = val
+	// 			leftBound = idx
+	// 		} else {
+	// 			max = currentSum
+	// 		}
+	// 		rightBound = idx
+	// 	}
+	// }
 	for idx, val := range a {
-		currentSum += val
+		// Is our current sum at or below zero?
+		if currentSum <= 0 {
+			// If the value is greater than the current sum, start a new subarray
+			// Remember that we only get here if currentSum is <= 0
+			if val > currentSum {
+				currentSum = val
+				currentLeftBound = idx
+				currentRightBound = idx
+			}
+		} else {
+			// Extend the current subarray
+			currentSum += val
+			currentRightBound = idx
+		}
 
 		if currentSum > max {
-			if val > currentSum {
-				max = val
-				currentSum = val
-				leftBound = idx
-			} else {
-				max = currentSum
-			}
-			rightBound = idx
+			max = currentSum
+			leftBound = currentLeftBound
+			rightBound = currentRightBound
 		}
 	}
 

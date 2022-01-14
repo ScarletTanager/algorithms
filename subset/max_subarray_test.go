@@ -13,7 +13,7 @@ var _ = Describe("MaxSubarray", func() {
 	)
 
 	BeforeEach(func() {
-		a = []int{9, -20, -100, 13, 12, 0, 4, -76, 243, 17, 16, -343}
+		a = []int{5, 12, -173, 9, -20, -100, 13, 12, 0, 4, -76, 243, 17, 16, -343}
 	})
 
 	Describe("MaxCrossingSubarray", func() {
@@ -33,8 +33,8 @@ var _ = Describe("MaxSubarray", func() {
 	Describe("MaxSubarray", func() {
 		It("Finds the maximum subarray", func() {
 			s, l, r := subset.MaxSubarray(a)
-			Expect(l).To(Equal(8))
-			Expect(r).To(Equal(10))
+			Expect(l).To(Equal(11))
+			Expect(r).To(Equal(13))
 			Expect(s).To(Equal(276))
 		})
 	})
@@ -42,8 +42,8 @@ var _ = Describe("MaxSubarray", func() {
 	Describe("MaxSubarrayLinear", func() {
 		It("Finds the maximum subarray", func() {
 			s, l, r := subset.MaxSubarrayLinear(a)
-			Expect(l).To(Equal(8))
-			Expect(r).To(Equal(10))
+			Expect(l).To(Equal(11))
+			Expect(r).To(Equal(13))
 			Expect(s).To(Equal(276))
 		})
 
@@ -54,9 +54,35 @@ var _ = Describe("MaxSubarray", func() {
 
 			It("Returns the maximum subarray", func() {
 				s, l, r := subset.MaxSubarrayLinear(a)
-				Expect(l).To(Equal(13))
+				Expect(l).To(Equal(10))
 				Expect(r).To(Equal(13))
-				Expect(s).To(Equal(85))
+				Expect(s).To(Equal(110))
+			})
+		})
+
+		Context("With a different array", func() {
+			BeforeEach(func() {
+				a = []int{50, -100, 35, 35}
+			})
+
+			It("Returns the maximum subarray", func() {
+				s, l, r := subset.MaxSubarrayLinear(a)
+				Expect(l).To(Equal(2))
+				Expect(r).To(Equal(3))
+				Expect(s).To(Equal(70))
+			})
+		})
+
+		Context("With only negative values", func() {
+			BeforeEach(func() {
+				a = []int{-20, -25, -13, -100, -1, -2}
+			})
+
+			It("Returns the single value with the lowest absolute value", func() {
+				s, l, r := subset.MaxSubarrayLinear(a)
+				Expect(l).To(Equal(4))
+				Expect(r).To(Equal(4))
+				Expect(s).To(Equal(-1))
 			})
 		})
 	})
