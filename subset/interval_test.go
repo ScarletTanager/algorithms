@@ -8,47 +8,48 @@ import (
 )
 
 var _ = Describe("Interval", func() {
-	Describe("MaxAverageInterval", func() {
-		var (
-			temps []float64
-		)
+	var (
+		temps []float64
+	)
 
-		BeforeEach(func() {
-			// Daily average temperature (C) for May 2018 in New Delhi, India
-			temps = []float64{
-				32.13,
-				29.98,
-				29.72,
-				31.39,
-				35.03,
-				32.67,
-				34.06,
-				29.38,
-				29.04,
-				32.74,
-				35.67,
-				35.57,
-				30.99,
-				30.57,
-				32.53,
-				35.56,
-				35.67,
-				33.76,
-				34.48,
-				36.04,
-				37.49,
-				37.68,
-				38.00,
-				36.71,
-				37.56,
-				38.02,
-				38.39,
-				36.94,
-				37.37,
-				35.04,
-				37.83,
-			}
-		})
+	BeforeEach(func() {
+		// Daily average temperature (C) for May 2018 in New Delhi, India
+		temps = []float64{
+			32.13,
+			29.98,
+			29.72,
+			31.39,
+			35.03,
+			32.67,
+			34.06,
+			29.38,
+			29.04,
+			32.74,
+			35.67,
+			35.57,
+			30.99,
+			30.57,
+			32.53,
+			35.56,
+			35.67,
+			33.76,
+			34.48,
+			36.04,
+			37.49,
+			37.68,
+			38.00,
+			36.71,
+			37.56,
+			38.02,
+			38.39,
+			36.94,
+			37.37,
+			35.04,
+			37.83,
+		}
+	})
+
+	Describe("MaxAverageInterval", func() {
 
 		It("Finds the maximum average interval", func() {
 			m, l, r := subset.MaxAverageInterval(temps, 3)
@@ -73,6 +74,20 @@ var _ = Describe("Interval", func() {
 				Expect(r).To(Equal(16))
 				Expect(m).To(Equal((temps[24] + temps[25] + temps[26]) / float64(3)))
 			})
+		})
+	})
+
+	Describe("LongestIntervalAverageExceeds", func() {
+		It("Finds the longest interval with an average > 38 C", func() {
+			l, r := subset.LongestIntervalExceeds(temps, float64(38.00))
+			Expect(l).To(Equal(25))
+			Expect(r).To(Equal(26))
+		})
+
+		It("Finds the longest interval with an average > 35 C", func() {
+			l, r := subset.LongestIntervalExceeds(temps, float64(35.00))
+			Expect(l).To(Equal(19))
+			Expect(r).To(Equal(30))
 		})
 	})
 

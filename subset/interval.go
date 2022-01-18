@@ -35,3 +35,39 @@ func MaxAverageInterval(a []float64, intervalLen int) (maxAverage float64,
 
 	return
 }
+
+func LongestIntervalExceeds(a []float64, threshold float64) (leftBound, rightBound int) {
+	// Convert every value into a deviation
+	devs := make([]float64, len(a))
+	for i, v := range a {
+		devs[i] = v - threshold
+	}
+
+	var (
+		currentSum, maxSum                  float64
+		currentLeftBound, currentRightBound int
+	)
+
+	maxSum = float64(-9223372036854775808)
+
+	// Now we just run Kadane...
+	for idx, val := range devs {
+		if currentSum <= 0 {
+			if val > currentSum {
+				currentSum = val
+				currentLeftBound = idx
+			}
+		} else {
+			currentSum += val
+			currentRightBound = idx
+		}
+
+		if currentSum > maxSum {
+			maxSum = currentSum
+			leftBound = currentLeftBound
+			rightBound = currentRightBound
+		}
+	}
+
+	return
+}
