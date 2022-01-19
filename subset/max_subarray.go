@@ -101,8 +101,9 @@ func MaxSubarrayLinear(a []int) (max, leftBound, rightBound int) {
 	}
 
 	max = minValueInt()
-	currentSum = max
+	// currentSum = max
 
+	// Incorrect implementation for example purposes
 	// for idx, val := range a {
 	// 	currentSum += val
 	//
@@ -117,16 +118,17 @@ func MaxSubarrayLinear(a []int) (max, leftBound, rightBound int) {
 	// 		rightBound = idx
 	// 	}
 	// }
+
 	for idx, val := range a {
 		// Is our current sum at or below zero?
 		if currentSum <= 0 {
 			// If the value is greater than the current sum, start a new subarray
 			// Remember that we only get here if currentSum is <= 0
-			if val > currentSum {
-				currentSum = val
-				currentLeftBound = idx
-				currentRightBound = idx
-			}
+			// if val > currentSum {
+			currentSum = val
+			currentLeftBound = idx
+			currentRightBound = idx
+			// }
 		} else {
 			// Extend the current subarray
 			currentSum += val

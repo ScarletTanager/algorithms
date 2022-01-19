@@ -47,6 +47,32 @@ var _ = Describe("MaxSubarray", func() {
 			Expect(s).To(Equal(276))
 		})
 
+		Context("With another, different array", func() {
+			BeforeEach(func() {
+				a = []int{5, 4, -6, 3, -12, 16, 23, -18, -47, 7, 21, -3}
+			})
+
+			It("Finds the maximum subarray", func() {
+				s, l, r := subset.MaxSubarrayLinear(a)
+				Expect(l).To(Equal(5))
+				Expect(r).To(Equal(6))
+				Expect(s).To(Equal(39))
+			})
+		})
+
+		Context("With a still different array", func() {
+			BeforeEach(func() {
+				a = []int{5, 4, -6, 3, 4, -12, 16, 23, -18, -47, 7, 21, -3, 85}
+			})
+
+			It("Returns the maximum subarray", func() {
+				s, l, r := subset.MaxSubarrayLinear(a)
+				Expect(l).To(Equal(10))
+				Expect(r).To(Equal(13))
+				Expect(s).To(Equal(110))
+			})
+		})
+
 		Context("With a different array", func() {
 			BeforeEach(func() {
 				a = []int{5, 4, -1, -2, 4, -12, 16, 23, -18, -47, 7, 21, -3, 85}

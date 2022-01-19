@@ -53,10 +53,8 @@ func LongestIntervalExceeds(a []float64, threshold float64) (leftBound, rightBou
 	// Now we just run Kadane...
 	for idx, val := range devs {
 		if currentSum <= 0 {
-			if val > currentSum {
-				currentSum = val
-				currentLeftBound = idx
-			}
+			currentSum = val
+			currentLeftBound = idx
 		} else {
 			currentSum += val
 			currentRightBound = idx
