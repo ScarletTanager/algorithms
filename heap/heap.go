@@ -20,8 +20,9 @@ const (
 // Heap is, well, a heap.  It can store any of the golang built-in numeric types
 // (anything which implements the <>== operators)
 type Heap[O constraints.Ordered] struct {
+	// Type tells us if this is a max or min heap
 	Type   HeapType
-	Size   int
+	size   int
 	length int
 	data   []O
 }
@@ -37,7 +38,7 @@ func NewMaxHeap[O constraints.Ordered](d []O) *Heap[O] {
 
 	h := &Heap[O]{
 		Type:   HEAPTYPE_MAX,
-		Size:   heapSize,
+		size:   heapSize,
 		length: l,
 		data:   d,
 	}
@@ -69,7 +70,8 @@ func (h *Heap[O]) Maxify(i int) {
 
 // Utility method which verifies that the position is within the actual heap.
 func (h *Heap[O]) isValidPosition(i int) bool {
-	return i > 0 && i <= len(h.data)
+	// return i > 0 && i <= len(h.data)
+	return i > 0 && i <= h.size
 }
 
 // swap exchanges the values at the specified positions with one another

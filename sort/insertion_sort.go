@@ -3,7 +3,7 @@ package sort
 // Insertion Sort - a well-known sorting algorithm
 // Runs in Θ(n^2)
 
-// InsertionSort performs a basic non-decreasinginsertion sort on
+// InsertionSort performs a basic non-decreasing insertion sort on
 //the slice of integers, returning the sorted slice.  The original slice
 // is sorted in situ.
 func InsertionSort(a []int) []int {

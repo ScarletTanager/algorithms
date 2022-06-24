@@ -54,6 +54,9 @@ var _ = Describe("Heap", func() {
 			//          16              13
 			//     14        7      9          10
 			//   2    8    4   1  5    7    3      6
+			for _, i := range []int{0, 1, 2, 3, 4, 7, 9, 10, 13} {
+				Expect(data[i]).NotTo(Equal(expected[i]))
+			}
 		})
 
 		It("Creates a heap", func() {
@@ -61,6 +64,13 @@ var _ = Describe("Heap", func() {
 			hd := h.Data()
 			for i := 0; i < len(expected); i++ {
 				Expect(hd[i]).To(Equal(expected[i]))
+			}
+		})
+
+		It("Heapifies the original slice in situ", func() {
+			heap.NewMaxHeap(data)
+			for i := 0; i < len(expected); i++ {
+				Expect(data[i]).To(Equal(expected[i]))
 			}
 		})
 	})
