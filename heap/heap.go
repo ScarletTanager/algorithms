@@ -34,15 +34,16 @@ func NewMaxHeap[O constraints.Ordered](d []O) *Heap[O] {
 		l += int(math.Pow(2, float64(exp)))
 	}
 
+	dHeader := make([]O, 1)
 	h := &Heap[O]{
 		Type:   HEAPTYPE_MAX,
 		length: l,
-		data:   d,
+		data:   append(dHeader, d...),
 	}
 
 	var start int = h.length / 2
 	for i := start; i >= 1; i = i - 1 {
-		h.Maxify(i)
+		h.maxify(i)
 	}
 
 	return h
@@ -50,15 +51,15 @@ func NewMaxHeap[O constraints.Ordered](d []O) *Heap[O] {
 
 // Data returns the underlying slice used for heap storage
 func (h *Heap[O]) Data() []O {
-	return h.data
+	return h.data[1:]
 }
 
-// Maxify runs heap maxification from the specified node
-func (h *Heap[O]) Maxify(i int) {
+// maxify runs heap maxification from the specified node
+func (h *Heap[O]) maxify(i int) {
 	var cur, m int
 	m = h.max((i * 2), ((i * 2) + 1))
 
-	for cur = i; m != 0 && h.data[m-1] > h.data[cur-1]; {
+	for cur = i; m != 0 && h.data[m] > h.data[cur]; {
 		h.swap(cur, m)
 		cur = m
 		m = h.max((cur * 2), ((cur * 2) + 1))
@@ -67,14 +68,14 @@ func (h *Heap[O]) Maxify(i int) {
 
 // Utility method which verifies that the position is within the actual heap.
 func (h *Heap[O]) isValidPosition(i int) bool {
-	return i > 0 && i <= len(h.data)
+	return i > 0 && i < len(h.data)
 }
 
 // swap exchanges the values at the specified positions with one another
 func (h *Heap[O]) swap(i, j int) {
-	var tmp O = h.data[i-1]
-	h.data[i-1] = h.data[j-1]
-	h.data[j-1] = tmp
+	var tmp O = h.data[i]
+	h.data[i] = h.data[j]
+	h.data[j] = tmp
 }
 
 func (h *Heap[O]) truncate() {
@@ -98,10 +99,10 @@ func (h *Heap[O]) minOrMax(i, j int, op HeapType) int {
 	var valI, valJ O
 
 	if h.isValidPosition(i) {
-		valI = h.data[i-1]
+		valI = h.data[i]
 		if h.isValidPosition(j) {
 			// Both indices are valid, so compare vals
-			valJ = h.data[j-1]
+			valJ = h.data[j]
 
 			if op == HEAPTYPE_MAX {
 				if valI >= valJ {
@@ -124,4 +125,8 @@ func (h *Heap[O]) minOrMax(i, j int, op HeapType) int {
 
 	// neither valid
 	return 0
+}
+
+func parent(pos int) int {
+	return pos >> 1
 }

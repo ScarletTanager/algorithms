@@ -15,7 +15,7 @@ func Sort[O constraints.Ordered](d []O) []O {
 	for i := h.length; i >= 2; i-- {
 		h.swap(1, i)
 		h.truncate()
-		h.Maxify(1)
+		h.maxify(1)
 	}
 	return h.Data()
 }
