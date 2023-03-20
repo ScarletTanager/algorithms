@@ -56,6 +56,39 @@ var _ = Describe("List", func() {
 		})
 	})
 
+	Describe("WithAttribute", func() {
+		When("No Vertex has the specified attribute and value", func() {
+			It("Returns nil", func() {
+				vs := g.WithAttribute("firstName", "frank")
+				Expect(vs).To(BeNil())
+			})
+		})
+
+		When("Only one Vertex has the specified attribute and value", func() {
+			It("Returns a list containing only the single matching Vertex", func() {
+				vs := g.WithAttribute("foo", "john")
+				Expect(vs).To(HaveLen(1))
+				expected, _ := g.AtIndex(2)
+				Expect(vs[0]).To(Equal(expected))
+			})
+		})
+
+		When("Multiple vertices have the specified attribute and value", func() {
+			BeforeEach(func() {
+				vertices[1].Attributes["birthstone"] = "opal"
+				vertices[3].Attributes["birthstone"] = "opal"
+			})
+
+			It("Returns a list containing the matching vertices", func() {
+				vs := g.WithAttribute("birthstone", "opal")
+				Expect(vs).To(HaveLen(2))
+				e1, _ := g.AtIndex(1)
+				e2, _ := g.AtIndex(3)
+				Expect(vs).To(ConsistOf(e1, e2))
+			})
+		})
+	})
+
 	Describe("Path", func() {
 		var (
 			source, target int
@@ -94,7 +127,7 @@ var _ = Describe("List", func() {
 					g.SearchBreadthFirst(0)
 				})
 
-				It("Returns a slice containing the vertices to traverse on the path", func() {
+				It("Returns a slice containing the vertices to traverse on the path, with distances marked correctly", func() {
 					p, err := g.Path(source, target)
 					Expect(err).NotTo(HaveOccurred())
 					Expect(p).NotTo((BeNil()))
@@ -102,6 +135,7 @@ var _ = Describe("List", func() {
 					for i := 0; i <= 3; i++ {
 						vp, _ := g.AtIndex(i)
 						Expect(p[i]).To(Equal(vp))
+						Expect(p[i].Get(graph.AttrDistance).(int)).To(Equal(i))
 					}
 				})
 

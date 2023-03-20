@@ -51,6 +51,9 @@ type AdjacencyList []*Vertex
 type Graph interface {
 	// AtIndex returns the Vertex at the specified position in the graph
 	AtIndex(int) (*Vertex, error)
+	// WithAttribute returns a slice of Vertices with the the specified value for the given attribute.
+	// In the case where no vertices are found with the given attribute, nil is returned.
+	WithAttribute(string, interface{}) []*Vertex
 	// SearchBreadthFirst performs a breadth-first search of the graph starting from the
 	// Vertex at the specified index.
 	SearchBreadthFirst(int) (*Vertex, error)

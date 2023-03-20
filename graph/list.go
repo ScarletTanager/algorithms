@@ -142,3 +142,19 @@ func (a AdjacencyList) AtIndex(index int) (*Vertex, error) {
 
 	return a[index], nil
 }
+
+func (a AdjacencyList) WithAttribute(attrName string, attrVal interface{}) []*Vertex {
+	var vertices []*Vertex
+
+	for i := 0; i < len(a); i++ {
+		vp, _ := a.AtIndex(i)
+		if vp.Get(attrName) == attrVal {
+			if vertices == nil {
+				vertices = make([]*Vertex, 0)
+			}
+			vertices = append(vertices, vp)
+		}
+	}
+
+	return vertices
+}
