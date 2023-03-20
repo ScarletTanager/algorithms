@@ -10,6 +10,11 @@ func (a AdjacencyList) Link(source, target int) error {
 		svp.edgeIndices = make([]int, 0)
 	}
 
+	// It is entirely allowable to have multiple edges linking the same two
+	// vertices, but our current model does not provide any good way to distinguish
+	// between edges connecting the same vertices, so the lack of a uniqueness test
+	// here is a bug, not really a feature.  We'll want to make edges actual "things"
+	// later on.
 	svp.edgeIndices = append(svp.edgeIndices, target)
 	return nil
 }
