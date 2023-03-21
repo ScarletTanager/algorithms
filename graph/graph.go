@@ -55,6 +55,9 @@ type Graph interface {
 	Link(int, int) error
 	// LinkBoth creates a bidirectionally navigable edge linking the source and target vertices
 	LinkBoth(int, int)
+	// LinkUnique only creates an edge between the vertices if one does not
+	// already exist.
+	LinkUnique(int, int)
 	// Path returns either an ordered slice of vertices (if a path exists from the source to the target)
 	// or nil
 	Path(int, int) ([]*Vertex, error)

@@ -7,21 +7,34 @@ import (
 
 func (a AdjacencyList) Link(source, target int) error {
 	svp := a[source]
-	if svp.edgeIndices == nil {
-		svp.edgeIndices = make([]int, 0)
-	}
 
-	// It is entirely allowable to have multiple edges linking the same two
-	// vertices, but our current model does not provide any good way to distinguish
-	// between edges connecting the same vertices, so the lack of a uniqueness test
-	// here is a bug, not really a feature.  We'll want to make edges actual "things"
-	// later on.
-	svp.edgeIndices = append(svp.edgeIndices, target)
+	link(svp, target)
+
 	return nil
 }
 
 func (a AdjacencyList) LinkBoth(source, target int) {
+}
 
+func (a AdjacencyList) LinkUnique(source, target int) {
+	svp, _ := a.AtIndex(source)
+	for _, ei := range svp.edgeIndices {
+		if ei == target {
+			// Link is there, stop
+			return
+		}
+	}
+
+	link(svp, target)
+}
+
+func link(svp *Vertex, target int) {
+	if svp.edgeIndices == nil {
+		svp.edgeIndices = make([]int, 0)
+	}
+
+	svp.edgeIndices = append(svp.edgeIndices, target)
+	return
 }
 
 const (
@@ -160,7 +173,8 @@ func (a AdjacencyList) WithAttribute(attrName string, attrVal interface{}) []*Ve
 	return vertices
 }
 
-// New creates a new graph.
+// New creates a new graph.  You must supply a non-nil slice of vertices (which can be empty, although
+// that feels like a weird thing to do).
 func New(vertices []Vertex) (Graph, error) {
 	var l AdjacencyList
 
