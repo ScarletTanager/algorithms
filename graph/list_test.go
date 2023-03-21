@@ -35,6 +35,15 @@ var _ = Describe("List", func() {
 		Expect(g).NotTo(BeNil())
 	})
 
+	Describe("Vertex.Index()", func() {
+		It("Returns the Vertex's index within the graph", func() {
+			for i := 0; i < len(vertices); i++ {
+				v, _ := g.AtIndex(i)
+				Expect(v.Index()).To(Equal(i))
+			}
+		})
+	})
+
 	Describe("AtIndex", func() {
 		When("The requested index is not in the graph", func() {
 			It("Returns nil", func() {
@@ -51,7 +60,7 @@ var _ = Describe("List", func() {
 		When("The requested index is within the graph", func() {
 			It("Returns the vertex at that position", func() {
 				v, _ := g.AtIndex(2)
-				Expect(*v).To(Equal(vertices[2]))
+				Expect(v.Get("foo").(string)).To(Equal("john"))
 			})
 		})
 	})

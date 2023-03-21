@@ -3,6 +3,7 @@ package graph
 // Vertex represents a node or vertex in a graph.  An adjacency list is just a slice of unique Vertex instances.
 type Vertex struct {
 	Attributes  Attributes
+	index       int
 	edgeIndices []int
 }
 
@@ -31,6 +32,12 @@ func (v *Vertex) Delete(attribute string) {
 	delete(v.Attributes, attribute)
 }
 
+// Index returns the Vertex's index *within the graph* - this is only meaningful
+// after the vertex has been used to create the graph
+func (v *Vertex) Index() int {
+	return v.index
+}
+
 // New creates a new graph.
 func New(vertices []Vertex) (Graph, error) {
 	var l AdjacencyList
@@ -39,6 +46,7 @@ func New(vertices []Vertex) (Graph, error) {
 		l = make(AdjacencyList, len(vertices))
 		for i, _ := range vertices {
 			vToUse := vertices[i]
+			vToUse.index = i
 			l[i] = &vToUse
 		}
 	}
