@@ -2,6 +2,7 @@ package graph
 
 import (
 	"errors"
+	"sync"
 )
 
 func (a AdjacencyList) Link(source, target int) error {
@@ -157,4 +158,29 @@ func (a AdjacencyList) WithAttribute(attrName string, attrVal interface{}) []*Ve
 	}
 
 	return vertices
+}
+
+// New creates a new graph.
+func New(vertices []Vertex) (Graph, error) {
+	var l AdjacencyList
+
+	if vertices != nil {
+		l = make(AdjacencyList, len(vertices))
+		for i, _ := range vertices {
+			vToUse := vertices[i]
+			vToUse.index = i
+			l[i] = &vToUse
+		}
+	}
+
+	return l, nil
+}
+
+var addMutex sync.Mutex
+
+func (a AdjacencyList) Add(v Vertex) {
+	addMutex.Lock()
+	v.index = len(a)
+	a = append(a, &v)
+	addMutex.Unlock()
 }

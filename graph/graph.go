@@ -38,22 +38,6 @@ func (v *Vertex) Index() int {
 	return v.index
 }
 
-// New creates a new graph.
-func New(vertices []Vertex) (Graph, error) {
-	var l AdjacencyList
-
-	if vertices != nil {
-		l = make(AdjacencyList, len(vertices))
-		for i, _ := range vertices {
-			vToUse := vertices[i]
-			vToUse.index = i
-			l[i] = &vToUse
-		}
-	}
-
-	return l, nil
-}
-
 type AdjacencyList []*Vertex
 
 type Graph interface {
@@ -74,4 +58,7 @@ type Graph interface {
 	// Path returns either an ordered slice of vertices (if a path exists from the source to the target)
 	// or nil
 	Path(int, int) ([]*Vertex, error)
+	// Add adds the specified Vertex to the graph.  Add does not do any uniqueness checks - it is up to the
+	// user to keep track of which vertices have already been added.
+	Add(Vertex)
 }
