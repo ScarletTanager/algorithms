@@ -38,7 +38,9 @@ func (v *Vertex) Index() int {
 	return v.index
 }
 
-type AdjacencyList []*Vertex
+type AdjacencyList struct {
+	vertices []*Vertex
+}
 
 type Graph interface {
 	// AtIndex returns the Vertex at the specified position in the graph

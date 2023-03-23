@@ -176,11 +176,18 @@ var _ = Describe("List", func() {
 			}
 		})
 
-		It("Adds the new Vertex", func() {
+		It("Returns the new Vertex", func() {
 			nvp, err := g.Add(newVertex)
 			Expect(nvp).NotTo(BeNil())
 			Expect(err).NotTo(HaveOccurred())
 			Expect(nvp.Get("foo").(string)).To(Equal("peter"))
+		})
+
+		It("Adds the new Vertex for later retrieval", func() {
+			g.Add(newVertex)
+			vps := g.WithAttribute("foo", "peter")
+			Expect(vps).NotTo(BeNil())
+			Expect(vps[0].Get("foo").(string)).To(Equal("peter"))
 		})
 	})
 })

@@ -5,18 +5,21 @@ import (
 	"sync"
 )
 
-func (a AdjacencyList) Link(source, target int) error {
-	svp := a[source]
+func (a *AdjacencyList) Link(source, target int) error {
+	svp, err := a.AtIndex(source)
+	if err != nil {
+		return err
+	}
 
 	link(svp, target)
 
 	return nil
 }
 
-func (a AdjacencyList) LinkBoth(source, target int) {
+func (a *AdjacencyList) LinkBoth(source, target int) {
 }
 
-func (a AdjacencyList) LinkUnique(source, target int) {
+func (a *AdjacencyList) LinkUnique(source, target int) {
 	svp, _ := a.AtIndex(source)
 	for _, ei := range svp.edgeIndices {
 		if ei == target {
@@ -47,7 +50,7 @@ const (
 	AttrParent   string = "parent"
 )
 
-func (a AdjacencyList) SearchBreadthFirst(sourceIndex int) (*Vertex, error) {
+func (a *AdjacencyList) SearchBreadthFirst(sourceIndex int) (*Vertex, error) {
 	var (
 		svp *Vertex
 		err error
@@ -57,7 +60,7 @@ func (a AdjacencyList) SearchBreadthFirst(sourceIndex int) (*Vertex, error) {
 	// We can either make the channel large enough for the case where every
 	// Vertex has an edge to every other Vertex (n vertices * (n-1) others),
 	// or we can total up the adjacencies.  For now we're brute-forcing.
-	queue := make(chan int, len(a)*(len(a)-1))
+	queue := make(chan int, len(a.vertices)*(len(a.vertices)-1))
 
 	if svp, err = a.AtIndex(sourceIndex); err != nil {
 		return nil, err
@@ -91,8 +94,8 @@ func (a AdjacencyList) SearchBreadthFirst(sourceIndex int) (*Vertex, error) {
 	return svp, nil
 }
 
-func (a AdjacencyList) reset() {
-	for i := 0; i < len(a); i++ {
+func (a *AdjacencyList) reset() {
+	for i := 0; i < len(a.vertices); i++ {
 		vp, _ := a.AtIndex(i)
 		vp.Set(AttrColor, AttrColorWhite)
 		vp.Delete(AttrDistance)
@@ -100,7 +103,7 @@ func (a AdjacencyList) reset() {
 	}
 }
 
-func (a AdjacencyList) Path(source, target int) ([]*Vertex, error) {
+func (a *AdjacencyList) Path(source, target int) ([]*Vertex, error) {
 	var (
 		svp         *Vertex
 		rpath, path []*Vertex
@@ -149,18 +152,18 @@ func (a AdjacencyList) Path(source, target int) ([]*Vertex, error) {
 	return path, nil
 }
 
-func (a AdjacencyList) AtIndex(index int) (*Vertex, error) {
-	if index > len(a)-1 {
+func (a *AdjacencyList) AtIndex(index int) (*Vertex, error) {
+	if index > len(a.vertices)-1 {
 		return nil, errors.New("Graph does not contain index")
 	}
 
-	return a[index], nil
+	return a.vertices[index], nil
 }
 
 func (a AdjacencyList) WithAttribute(attrName string, attrVal interface{}) []*Vertex {
 	var vertices []*Vertex
 
-	for i := 0; i < len(a); i++ {
+	for i := 0; i < len(a.vertices); i++ {
 		vp, _ := a.AtIndex(i)
 		if vp.Get(attrName) == attrVal {
 			if vertices == nil {
@@ -179,23 +182,23 @@ func New(vertices []Vertex) (Graph, error) {
 	var l AdjacencyList
 
 	if vertices != nil {
-		l = make(AdjacencyList, len(vertices))
+		l.vertices = make([]*Vertex, len(vertices))
 		for i, _ := range vertices {
 			vToUse := vertices[i]
 			vToUse.index = i
-			l[i] = &vToUse
+			l.vertices[i] = &vToUse
 		}
 	}
 
-	return l, nil
+	return &l, nil
 }
 
 var addMutex sync.Mutex
 
-func (a AdjacencyList) Add(v Vertex) (*Vertex, error) {
+func (a *AdjacencyList) Add(v Vertex) (*Vertex, error) {
 	addMutex.Lock()
-	v.index = len(a)
-	a = append(a, &v)
+	v.index = len(a.vertices)
+	a.vertices = append(a.vertices, &v)
 	addMutex.Unlock()
 
 	return a.AtIndex(v.index)
