@@ -63,5 +63,5 @@ type Graph interface {
 	Path(int, int) ([]*Vertex, error)
 	// Add adds the specified Vertex to the graph.  Add does not do any uniqueness checks - it is up to the
 	// user to keep track of which vertices have already been added.
-	Add(Vertex)
+	Add(Vertex) (*Vertex, error)
 }

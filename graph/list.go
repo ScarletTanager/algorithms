@@ -192,9 +192,11 @@ func New(vertices []Vertex) (Graph, error) {
 
 var addMutex sync.Mutex
 
-func (a AdjacencyList) Add(v Vertex) {
+func (a AdjacencyList) Add(v Vertex) (*Vertex, error) {
 	addMutex.Lock()
 	v.index = len(a)
 	a = append(a, &v)
 	addMutex.Unlock()
+
+	return a.AtIndex(v.index)
 }

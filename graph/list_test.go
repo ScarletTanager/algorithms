@@ -162,4 +162,25 @@ var _ = Describe("List", func() {
 			})
 		})
 	})
+
+	Describe("Add", func() {
+		var (
+			newVertex graph.Vertex
+		)
+
+		BeforeEach(func() {
+			newVertex = graph.Vertex{
+				Attributes: graph.Attributes{
+					"foo": "peter",
+				},
+			}
+		})
+
+		It("Adds the new Vertex", func() {
+			nvp, err := g.Add(newVertex)
+			Expect(nvp).NotTo(BeNil())
+			Expect(err).NotTo(HaveOccurred())
+			Expect(nvp.Get("foo").(string)).To(Equal("peter"))
+		})
+	})
 })
